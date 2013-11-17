@@ -38,7 +38,7 @@ public enum EnumPosicion implements Serializable {
 		case ALERO:
 			return "Alero";
 		case PIVOT:
-			return "PÃ­vot";
+			return "Pívot";
 		default:
 			return "";
 		}
