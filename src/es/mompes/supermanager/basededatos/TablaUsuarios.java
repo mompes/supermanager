@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import es.mompes.supermanager.util.Contenedor;
-
+import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 
@@ -44,15 +44,19 @@ public class TablaUsuarios {
 	 *            La nueva clave.
 	 * @return El id de la fila insertada o -1 en caso de error.
 	 */
-	public static final long createEntry(final String nnombre,
+	public static final long createEntry(BaseDeDatos bd, final String nnombre,
 			final String nclave) {
+		if (!bd.isOpen()) {
+			bd.open();
+		}
 		// Almacena los valores a insertar en un objeto
 		ContentValues cv = new ContentValues();
 		cv.put(KEY_NAME, nnombre);
 		cv.put(KEY_PASSWORD, nclave);
 		// Inserta los nuevos datos en la base de datos
-		return Contenedor.getInstance().baseDeDatos.database.insert(
-				DATABASE_TABLE, null, cv);
+		long resultado = bd.database.insert(DATABASE_TABLE, null, cv);
+		bd.close();
+		return resultado;
 	}
 
 	/**
@@ -63,17 +67,20 @@ public class TablaUsuarios {
 	 * @return La contraseña del usuario o null si no se encuentra el usuario
 	 *         indicado.
 	 */
-	public static final String getPassword(final String nombre) {
+	public static final String getPassword(BaseDeDatos bd, final String nombre) {
+		if (!bd.isOpen()) {
+			bd.open();
+		}
 		String resultado = null;
 		String[] columnas = new String[] { KEY_PASSWORD };
-		Cursor c = Contenedor.getInstance().baseDeDatos.database.query(
-				DATABASE_TABLE, columnas, KEY_NAME + "=?",
+		Cursor c = bd.database.query(DATABASE_TABLE, columnas, KEY_NAME + "=?",
 				new String[] { nombre }, null, null, null);
 		if (c != null && c.moveToFirst()
 				&& !c.isNull(c.getColumnIndex(KEY_PASSWORD))) {
 			resultado = c.getString(c.getColumnIndex(KEY_PASSWORD));
 			c.close();
 		}
+		bd.close();
 		return resultado;
 	}
 
@@ -84,13 +91,16 @@ public class TablaUsuarios {
 	 *            Nombre a comprobar.
 	 * @return True si la entrada ya está y false en caso contrario.
 	 */
-	public static final boolean exists(final String nombre) {
+	public static final boolean exists(BaseDeDatos bd, final String nombre) {
+		if (!bd.isOpen()) {
+			bd.open();
+		}
 		String[] columnas = new String[] { KEY_NAME };
-		Cursor c = Contenedor.getInstance().baseDeDatos.database.query(
-				DATABASE_TABLE, columnas, KEY_NAME + " =?",
-				new String[] { nombre }, null, null, null);
+		Cursor c = bd.database.query(DATABASE_TABLE, columnas,
+				KEY_NAME + " =?", new String[] { nombre }, null, null, null);
 		boolean resultado = c != null && c.getCount() > 0;
 		c.close();
+		bd.close();
 		return resultado;
 	}
 
@@ -102,12 +112,16 @@ public class TablaUsuarios {
 	 * @param nclave
 	 *            Clave a actualizar.
 	 */
-	public static final void updateEntry(final String nnombre,
+	public static final void updateEntry(BaseDeDatos bd, final String nnombre,
 			final String nclave) {
+		if (!bd.isOpen()) {
+			bd.open();
+		}
 		ContentValues cv = new ContentValues();
 		cv.put(KEY_PASSWORD, nclave);
-		Contenedor.getInstance().baseDeDatos.database.update(DATABASE_TABLE,
-				cv, KEY_NAME + "=?", new String[] { nnombre });
+		bd.database.update(DATABASE_TABLE, cv, KEY_NAME + "=?",
+				new String[] { nnombre });
+		bd.close();
 	}
 
 	/**
@@ -116,9 +130,13 @@ public class TablaUsuarios {
 	 * @param nnombre
 	 *            Nombre de la entrada a borrar.
 	 */
-	public static final void deleteEntry(final String nnombre) {
-		Contenedor.getInstance().baseDeDatos.database.delete(DATABASE_TABLE,
-				KEY_NAME + "=?", new String[] { nnombre });
+	public static final void deleteEntry(BaseDeDatos bd, final String nnombre) {
+		if (!bd.isOpen()) {
+			bd.open();
+		}
+		bd.database.delete(DATABASE_TABLE, KEY_NAME + "=?",
+				new String[] { nnombre });
+		bd.close();
 	}
 
 	/**
@@ -128,11 +146,14 @@ public class TablaUsuarios {
 	 * @return Una lista con los nombres de todos los usuarios en la base de
 	 *         datos.
 	 */
-	public static final List<String> getAll() {
+	public static final List<String> getAll(BaseDeDatos bd) {
+		if (!bd.isOpen()) {
+			bd.open();
+		}
 		String[] columnas = new String[] { KEY_NAME };
 		// Recibe todos los datos almacenados en la base de datos
-		Cursor c = Contenedor.getInstance().baseDeDatos.database.query(
-				DATABASE_TABLE, columnas, null, null, null, null, null);
+		Cursor c = bd.database.query(DATABASE_TABLE, columnas, null, null,
+				null, null, null);
 		List<String> lista = new LinkedList<String>();
 		int index = c.getColumnIndex(KEY_NAME);
 		// Los almacena en una lista
@@ -141,7 +162,7 @@ public class TablaUsuarios {
 		}
 
 		c.close();
-
+		bd.close();
 		return lista;
 	}
 }

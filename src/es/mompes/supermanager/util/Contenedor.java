@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
-
 import es.mompes.supermanager.basededatos.BaseDeDatos;
 
 /**
@@ -27,7 +25,7 @@ public class Contenedor implements Serializable {
 	/**
 	 * La base de datos.
 	 */
-	public BaseDeDatos baseDeDatos = null;
+	private BaseDeDatos baseDeDatos = null;
 	/**
 	 * Contiene el login al supermanager y permite la navegaci�n por el mismo.
 	 */
@@ -40,11 +38,6 @@ public class Contenedor implements Serializable {
 	 * El mercado.
 	 */
 	public Mercado mercado = new Mercado();
-	/**
-	 * Contiene una lista con todas las actividades activas de la app. Esta
-	 * lista es necesaria para el control de las bases de datos.
-	 */
-	public ArrayList<Activity> listaActivities = new ArrayList<Activity>();
 
 	private static Contenedor contenedor;
 
@@ -53,6 +46,13 @@ public class Contenedor implements Serializable {
 			contenedor = new Contenedor();
 		}
 		return contenedor;
+	}
+
+	public BaseDeDatos getBaseDeDatos(Activity activity) {
+		if (baseDeDatos == null) {
+			baseDeDatos = new BaseDeDatos(activity);
+		}
+		return baseDeDatos;
 	}
 
 	public static void setInstance(final Contenedor ncontenedor) {
@@ -64,7 +64,6 @@ public class Contenedor implements Serializable {
 		this.acceso = (Acceso) aInputStream.readObject();
 		this.equipos = (List<EquipoSupermanager>) aInputStream.readObject();
 		this.mercado = (Mercado) aInputStream.readObject();
-		this.listaActivities = new ArrayList<Activity>();
 	}
 
 	private void writeObject(ObjectOutputStream aOutputStream)
