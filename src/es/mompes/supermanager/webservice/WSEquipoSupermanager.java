@@ -19,7 +19,6 @@ import es.mompes.supermanager.util.EnumPosicion;
 import es.mompes.supermanager.util.EquipoACB;
 import es.mompes.supermanager.util.EquipoSupermanager;
 import es.mompes.supermanager.util.GetPageException;
-import es.mompes.supermanager.util.Helper;
 import es.mompes.supermanager.util.SupermanagerPlayer;
 
 public class WSEquipoSupermanager {
@@ -303,10 +302,9 @@ public class WSEquipoSupermanager {
 		List<EquipoSupermanager> equipos = new LinkedList<EquipoSupermanager>();
 		PaginaEquipos teamsPage = null;
 		try {
-			teamsPage = new PaginaEquipos(
-					WebService.getPaginaLogueado(Configuration
-							.getInstance()
-							.getProperty(Configuration.EQUIPOSURL), null));
+			teamsPage = new PaginaEquipos(WebService.getPaginaLogueado(
+					Configuration.getInstance().getProperty(
+							Configuration.EQUIPOSURL), null));
 		} catch (Exception e) {
 			Log.e(TAG, "Error descargando p·gina: " + e.getMessage());
 			return null;
@@ -320,7 +318,7 @@ public class WSEquipoSupermanager {
 		}
 		return equipos;
 	}
-	
+
 	public static boolean crearEquipo(final String nombre) {
 		List<NameValuePair> parametros = new LinkedList<NameValuePair>();
 		parametros.add(new BasicNameValuePair("nombre", nombre));
@@ -355,9 +353,8 @@ public class WSEquipoSupermanager {
 		pocosJugadores = "";
 		// Get element
 		nodoEquipo = elemento.getChildNodes();
-		codigo = Integer.parseInt(Helper.getTextContent(nodoEquipo.item(1)));
-		nombre = Helper.getTextContent(nodoEquipo.item(3).getChildNodes()
-				.item(1));
+		codigo = Integer.parseInt(nodoEquipo.item(1).getTextContent());
+		nombre = nodoEquipo.item(3).getChildNodes().item(1).getTextContent();
 		if (nodoEquipo.item(3).getChildNodes().getLength() > 2
 				&& nodoEquipo.item(3).getChildNodes().item(2).getNodeValue()
 						.contains("jug")) {
@@ -385,18 +382,18 @@ public class WSEquipoSupermanager {
 						.equals("gif/baja.gif")) {
 			baja = true;
 		}
-		posicionJornada = Integer.parseInt(helperParentheses2(Helper
-				.getTextContent(nodoEquipo.item(5))));
-		posicionGeneral = Integer.parseInt(helperParentheses2(Helper
-				.getTextContent(nodoEquipo.item(7))));
-		posicionBroker = Integer.parseInt(helperParentheses2(Helper
-				.getTextContent(nodoEquipo.item(9))));
-		ultimaValoracion = Float.parseFloat(helperParentheses1(Helper
-				.getTextContent(nodoEquipo.item(5))));
-		broker = Integer.parseInt(helperParentheses1(Helper
-				.getTextContent(nodoEquipo.item(9))));
-		valoracionTotal = Float.parseFloat(helperParentheses1(Helper
-				.getTextContent(nodoEquipo.item(7))));
+		posicionJornada = Integer.parseInt(helperParentheses2(nodoEquipo
+				.item(5).getTextContent()));
+		posicionGeneral = Integer.parseInt(helperParentheses2(nodoEquipo
+				.item(7).getTextContent()));
+		posicionBroker = Integer.parseInt(helperParentheses2(nodoEquipo.item(9)
+				.getTextContent()));
+		ultimaValoracion = Float.parseFloat(helperParentheses1(nodoEquipo.item(
+				5).getTextContent()));
+		broker = Integer.parseInt(helperParentheses1(nodoEquipo.item(9)
+				.getTextContent()));
+		valoracionTotal = Float.parseFloat(helperParentheses1(nodoEquipo
+				.item(7).getTextContent()));
 		EquipoSupermanager equipo = new EquipoSupermanager(codigo, nombre,
 				broker, posicionGeneral, posicionBroker, valoracionTotal,
 				ultimaValoracion, posicionJornada, baja, lesion);
@@ -436,9 +433,8 @@ public class WSEquipoSupermanager {
 		j.setPosicion(posicion);
 		NodeList jugador = elemento.getChildNodes();
 		if (jugador.item(1).getChildNodes().item(0) instanceof Element
-				&& Helper.getTextContent(
-						jugador.item(1).getChildNodes().item(0)).equals(
-						"F I C H AL I B R E")) {
+				&& jugador.item(1).getChildNodes().item(0).getTextContent()
+						.equals("F I C H AL I B R E")) {
 			j.setLibre(true);
 			return j;
 		}
@@ -465,13 +461,13 @@ public class WSEquipoSupermanager {
 
 		}
 		try {
-			j.setNombre(Helper.getTextContent(jugador.item(5).getChildNodes()
-					.item(0)));
+			j.setNombre(jugador.item(5).getChildNodes().item(0)
+					.getTextContent());
 		} catch (Exception e) {
 			j.setNombre(SupermanagerPlayer.datosDesconocidos);
 		}
 		try {
-			j.setEquipo(Helper.getTextContent(jugador.item(7)));
+			j.setEquipo(jugador.item(7).getTextContent());
 		} catch (Exception e) {
 			j.setEquipo(SupermanagerPlayer.datosDesconocidos);
 		}
@@ -483,8 +479,8 @@ public class WSEquipoSupermanager {
 			j.setCodigoACB(SupermanagerPlayer.datosDesconocidos);
 		}
 		try {
-			if (Helper.getTextContent(jugador.item(11)).contains("j&ordf;")) {
-				String jornada = Helper.getTextContent(jugador.item(11));
+			if (jugador.item(11).getTextContent().contains("j&ordf;")) {
+				String jornada = jugador.item(11).getTextContent();
 				int inicio = jornada.indexOf(';') + 1;
 				int fin = jornada.indexOf(')');
 				j.setJornadaFichaje(Integer.parseInt(jornada.substring(inicio,
@@ -494,13 +490,13 @@ public class WSEquipoSupermanager {
 			j.setJornadaFichaje(Integer.MAX_VALUE);
 		}
 		try {
-			j.setMedia(Double.parseDouble(Helper.getTextContent(
-					jugador.item(13)).replace(',', '.')));
+			j.setMedia(Double.parseDouble(jugador.item(13).getTextContent()
+					.replace(',', '.')));
 		} catch (Exception e) {
 			j.setMedia(Double.NEGATIVE_INFINITY);
 		}
 		try {
-			j.setPrecio(Integer.parseInt(Helper.getTextContent(jugador.item(9))
+			j.setPrecio(Integer.parseInt(jugador.item(9).getTextContent()
 					.replace(".", "")));
 		} catch (Exception e) {
 			j.setPrecio(0);
@@ -514,9 +510,8 @@ public class WSEquipoSupermanager {
 		j.setPosicion(posicion);
 		NodeList jugador = elemento.getChildNodes();
 		if (jugador.item(1).getChildNodes().item(0) instanceof Element
-				&& Helper.getTextContent(
-						jugador.item(1).getChildNodes().item(0)).equals(
-						"F I C H AL I B R E")) {
+				&& jugador.item(1).getChildNodes().item(0).getTextContent()
+						.equals("F I C H AL I B R E")) {
 			j.setLibre(true);
 			// No se puede terminar aqu√≠ porque tiene que comprobar si se puede
 			// anular el cambio
@@ -544,13 +539,13 @@ public class WSEquipoSupermanager {
 
 		}
 		try {
-			j.setNombre(Helper.getTextContent(jugador.item(5).getChildNodes()
-					.item(0)));
+			j.setNombre(jugador.item(5).getChildNodes().item(0)
+					.getTextContent());
 		} catch (Exception e) {
 			j.setNombre(SupermanagerPlayer.datosDesconocidos);
 		}
 		try {
-			j.setEquipo(Helper.getTextContent(jugador.item(9)));
+			j.setEquipo(jugador.item(9).getTextContent());
 		} catch (Exception e) {
 			j.setEquipo(SupermanagerPlayer.datosDesconocidos);
 		}
@@ -562,8 +557,8 @@ public class WSEquipoSupermanager {
 			j.setCodigoACB(SupermanagerPlayer.datosDesconocidos);
 		}
 		try {
-			if (Helper.getTextContent(jugador.item(11)).contains("j&ordf;")) {
-				String jornada = Helper.getTextContent(jugador.item(11));
+			if (jugador.item(11).getTextContent().contains("j&ordf;")) {
+				String jornada = jugador.item(11).getTextContent();
 				int inicio = jornada.indexOf(';') + 1;
 				int fin = jornada.indexOf(')');
 				j.setJornadaFichaje(Integer.parseInt(jornada.substring(inicio,
@@ -573,20 +568,20 @@ public class WSEquipoSupermanager {
 			j.setJornadaFichaje(Integer.MAX_VALUE);
 		}
 		try {
-			j.setMedia(Double.parseDouble(Helper.getTextContent(
-					jugador.item(19)).replace(',', '.')));
+			j.setMedia(Double.parseDouble(jugador.item(19).getTextContent()
+					.replace(',', '.')));
 		} catch (Exception e) {
 			j.setMedia(Double.NEGATIVE_INFINITY);
 		}
 		try {
-			j.setPrecio(Integer.parseInt(Helper
-					.getTextContent(jugador.item(13)).replace(".", "")));
+			j.setPrecio(Integer.parseInt(jugador.item(13).getTextContent()
+					.replace(".", "")));
 		} catch (Exception e) {
 			j.setPrecio(Integer.MIN_VALUE);
 		}
 		try {
-			j.setUltimaValoracion(Double.parseDouble(Helper.getTextContent(
-					jugador.item(15)).replace(',', '.')));
+			j.setUltimaValoracion(Double.parseDouble(jugador.item(15)
+					.getTextContent().replace(',', '.')));
 		} catch (Exception e) {
 			j.setUltimaValoracion(Double.NEGATIVE_INFINITY);
 		}
