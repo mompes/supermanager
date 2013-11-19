@@ -50,23 +50,4 @@ public class Helper {
 		d.setContentView(tv);
 		d.show();
 	}
-
-	/**
-	 * Devuelve el contenido de un nodo.
-	 * 
-	 * @param node
-	 *            El nodo del que se quiere conocer su contenido.
-	 * @return El texto del nodo.
-	 */
-	public static String getTextContent(final Node node) {
-		StringBuffer buffer = new StringBuffer();
-		NodeList childList = node.getChildNodes();
-		for (int i = 0; i < childList.getLength(); i++) {
-			Node child = childList.item(i);
-			if (child.getNodeType() == Node.TEXT_NODE)
-				buffer.append(child.getNodeValue());
-		}
-
-		return buffer.toString();
-	}
 }

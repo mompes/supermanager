@@ -14,7 +14,6 @@ import es.mompes.supermanager.util.Configuration;
 import es.mompes.supermanager.util.EnumNacionalidad;
 import es.mompes.supermanager.util.EnumPosicion;
 import es.mompes.supermanager.util.GetPageException;
-import es.mompes.supermanager.util.Helper;
 import es.mompes.supermanager.util.SupermanagerPlayer;
 
 public class WSMercado {
@@ -145,9 +144,8 @@ public class WSMercado {
 		j.setPosicion(posicion);
 		NodeList jugador = nodo.getChildNodes();
 		if (jugador.item(1).getChildNodes().item(0) instanceof Element
-				&& Helper.getTextContent(
-						jugador.item(1).getChildNodes().item(0)).equals(
-						"F I C H AL I B R E")) {
+				&& jugador.item(1).getChildNodes().item(0).getTextContent()
+						.equals("F I C H AL I B R E")) {
 			j.setLibre(true);
 			// Puede terminar puesto que no va a obtener nada más
 			return j;
@@ -175,13 +173,13 @@ public class WSMercado {
 
 		}
 		try {
-			j.setNombre(Helper.getTextContent(jugador.item(5).getChildNodes()
-					.item(0)));
+			j.setNombre(jugador.item(5).getChildNodes().item(0)
+					.getTextContent());
 		} catch (Exception e) {
 			j.setNombre(SupermanagerPlayer.datosDesconocidos);
 		}
 		try {
-			j.setEquipo(Helper.getTextContent(jugador.item(9)));
+			j.setEquipo(jugador.item(9).getTextContent());
 		} catch (Exception e) {
 			j.setEquipo(SupermanagerPlayer.datosDesconocidos);
 		}
@@ -193,49 +191,49 @@ public class WSMercado {
 			j.setCodigoACB(SupermanagerPlayer.datosDesconocidos);
 		}
 		try {
-			j.setMedia(Double.parseDouble(Helper.getTextContent(
-					jugador.item(13)).replace(',', '.')));
+			j.setMedia(Double.parseDouble(jugador.item(13).getTextContent()
+					.replace(',', '.')));
 		} catch (Exception e) {
 			j.setMedia(Double.NEGATIVE_INFINITY);
 		}
 		try {
-			j.setPrecio(Integer.parseInt(Helper
-					.getTextContent(jugador.item(15)).replace(".", "")));
+			j.setPrecio(Integer.parseInt(jugador.item(15).getTextContent()
+					.replace(".", "")));
 		} catch (Exception e) {
 			j.setPrecio(Integer.MIN_VALUE);
 		}
 		try {
-			j.setUltimaValoracion(Double.parseDouble(Helper.getTextContent(
-					jugador.item(19)).replace(',', '.')));
+			j.setUltimaValoracion(Double.parseDouble(jugador.item(19)
+					.getTextContent().replace(',', '.')));
 		} catch (Exception e) {
 			j.setUltimaValoracion(Double.NEGATIVE_INFINITY);
 		}
 		try {
-			j.setBalance("(" + Helper.getTextContent(jugador.item(11)) + ")");
+			j.setBalance("(" + jugador.item(11).getTextContent() + ")");
 		} catch (Exception e) {
 		}
 		try {
-			j.setMinutos(Helper.getTextContent(jugador.item(17)));
+			j.setMinutos(jugador.item(17).getTextContent());
 		} catch (Exception e) {
 		}
 		try {
-			j.setValoracionUltimos3Partidos(Double.parseDouble(Helper
-					.getTextContent(jugador.item(21)).replace(',', '.')));
+			j.setValoracionUltimos3Partidos(Double.parseDouble(jugador.item(21)
+					.getTextContent().replace(',', '.')));
 		} catch (Exception e) {
 		}
 		try {
-			j.setSube15(Double.parseDouble(Helper.getTextContent(
-					jugador.item(23)).replace(',', '.')));
+			j.setSube15(Double.parseDouble(jugador.item(23).getTextContent()
+					.replace(',', '.')));
 		} catch (Exception e) {
 		}
 		try {
-			j.setSeMantiene(Double.parseDouble(Helper.getTextContent(
-					jugador.item(25)).replace(',', '.')));
+			j.setSeMantiene(Double.parseDouble(jugador.item(25)
+					.getTextContent().replace(',', '.')));
 		} catch (Exception e) {
 		}
 		try {
-			j.setBaja15(Double.parseDouble(Helper.getTextContent(
-					jugador.item(27)).replace(',', '.')));
+			j.setBaja15(Double.parseDouble(jugador.item(27).getTextContent()
+					.replace(',', '.')));
 		} catch (Exception e) {
 		}
 		return j;
@@ -248,9 +246,8 @@ public class WSMercado {
 		j.setPosicion(posicion);
 		NodeList jugador = elemento.getChildNodes();
 		if (jugador.item(1).getChildNodes().item(0) instanceof Element
-				&& Helper.getTextContent(
-						jugador.item(1).getChildNodes().item(0)).equals(
-						"F I C H AL I B R E")) {
+				&& jugador.item(1).getChildNodes().item(0).getTextContent()
+						.equals("F I C H AL I B R E")) {
 			j.setLibre(true);
 			return j;
 		}
@@ -277,13 +274,13 @@ public class WSMercado {
 
 		}
 		try {
-			j.setNombre(Helper.getTextContent(jugador.item(7).getChildNodes()
-					.item(0)));
+			j.setNombre(jugador.item(7).getChildNodes().item(0)
+					.getTextContent());
 		} catch (Exception e) {
 			j.setNombre(SupermanagerPlayer.datosDesconocidos);
 		}
 		try {
-			j.setEquipo(Helper.getTextContent(jugador.item(11)));
+			j.setEquipo(jugador.item(11).getTextContent());
 		} catch (Exception e) {
 			j.setEquipo(SupermanagerPlayer.datosDesconocidos);
 		}
@@ -295,8 +292,8 @@ public class WSMercado {
 			j.setCodigoACB(SupermanagerPlayer.datosDesconocidos);
 		}
 		try {
-			if (Helper.getTextContent(jugador.item(11)).contains("j&ordf;")) {
-				String jornada = Helper.getTextContent(jugador.item(11));
+			if (jugador.item(11).getTextContent().contains("j&ordf;")) {
+				String jornada = jugador.item(11).getTextContent();
 				int inicio = jornada.indexOf(';') + 1;
 				int fin = jornada.indexOf(')');
 				j.setJornadaFichaje(Integer.parseInt(jornada.substring(inicio,
@@ -306,14 +303,14 @@ public class WSMercado {
 			j.setJornadaFichaje(Integer.MAX_VALUE);
 		}
 		try {
-			j.setMedia(Double.parseDouble(Helper.getTextContent(
-					jugador.item(15)).replace(',', '.')));
+			j.setMedia(Double.parseDouble(jugador.item(15).getTextContent()
+					.replace(',', '.')));
 		} catch (Exception e) {
 			j.setMedia(Double.NEGATIVE_INFINITY);
 		}
 		try {
-			j.setPrecio(Integer.parseInt(Helper
-					.getTextContent(jugador.item(17)).replace(".", "")));
+			j.setPrecio(Integer.parseInt(jugador.item(17).getTextContent()
+					.replace(".", "")));
 		} catch (Exception e) {
 			j.setPrecio(Integer.MIN_VALUE);
 		}

@@ -15,7 +15,6 @@ import es.mompes.supermanager.util.Comentario;
 import es.mompes.supermanager.util.Configuration;
 import es.mompes.supermanager.util.EquipoLiga;
 import es.mompes.supermanager.util.GetPageException;
-import es.mompes.supermanager.util.Helper;
 import es.mompes.supermanager.util.Liga;
 
 public class WSLiga {
@@ -65,10 +64,10 @@ public class WSLiga {
 			// Get element
 			Element element = (Element) nodeList.item(i);
 			NodeList equipo = element.getChildNodes();
-			nnombre = Helper.getTextContent(equipo.item(3));
-			nusuario = Helper.getTextContent(equipo.item(5));
-			nvaloracion = Helper.getTextContent(equipo.item(7))
-					.replace(',', '.').replace("\"", "");
+			nnombre = equipo.item(3).getTextContent();
+			nusuario = equipo.item(5).getTextContent();
+			nvaloracion = equipo.item(7).getTextContent().replace(',', '.')
+					.replace("\"", "");
 			equipoLiga = new EquipoLiga(nnombre, nusuario, nvaloracion);
 			listaEquipos.add(equipoLiga);
 		}
@@ -93,14 +92,14 @@ public class WSLiga {
 		Long ncodigo;
 		Liga liga;
 		for (int i = 0; i < nodeList.getLength(); i++) {
-			if (Helper.getTextContent(nodeList.item(i)).equals("")
+			if (nodeList.item(i).getTextContent().equals("")
 					| (nodeList.item(i).getChildNodes().getLength() > 0 && nodeList
 							.item(i).getChildNodes().item(0).getNodeName()
 							.equals("img"))) {
 				continue;
 			}
 			// Get element
-			nnombre = Helper.getTextContent(nodeList.item(i));
+			nnombre = nodeList.item(i).getTextContent();
 			ncodigo = Long.parseLong(nodeList.item(i).getAttributes()
 					.getNamedItem("href").getNodeValue().substring(22));
 			liga = new Liga(nnombre, ncodigo);
@@ -172,10 +171,12 @@ public class WSLiga {
 		// Añade los datos
 		List<NameValuePair> parametros = new LinkedList<NameValuePair>();
 		parametros.add(new BasicNameValuePair(ENVIAR_TEXTO_NAME, comentario));
-		parametros.add(new BasicNameValuePair(ENVIAR_BOTON_NAME, ENVIAR_BOTON_VALUE));
+		parametros.add(new BasicNameValuePair(ENVIAR_BOTON_NAME,
+				ENVIAR_BOTON_VALUE));
 		// Envía el comentario
-		WebService.getPaginaLogueado(Configuration.getInstance().getProperty(
-				Configuration.AÑADIR_COMENTARIO_LIGA)
-				+ Long.toString(codigo), parametros);
+		WebService.getPaginaLogueado(
+				Configuration.getInstance().getProperty(
+						Configuration.AÑADIR_COMENTARIO_LIGA)
+						+ Long.toString(codigo), parametros);
 	}
 }
