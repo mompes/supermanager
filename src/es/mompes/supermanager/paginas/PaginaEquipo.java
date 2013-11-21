@@ -14,8 +14,8 @@ import android.util.Log;
 
 /**
  * 
- * Elimina y corrige algunas etiquetas html de la p�gina del equipo. Ofreciendo
- * el resultado en forma de �rbol XML.
+ * Elimina y corrige algunas etiquetas html de la p�gina del equipo.
+ * Ofreciendo el resultado en forma de �rbol XML.
  * 
  * @author Juan Mompe�n Esteban
  * 
@@ -33,13 +33,13 @@ public class PaginaEquipo extends Pagina {
 
 	@Override
 	protected void getTabla() {
-		pagina = pagina
-				.substring(pagina
-						.indexOf("<td width=\"21\" rowspan=\"3\" background=\"gif/tablabases.gif\">") - 5);
-		pagina = pagina
-				.substring(
-						0,
-						pagina.indexOf("</table>\n<table width=\"750\" cellpadding=\"0\" cellspacing=\"0\" background=\"gif/fondotablaabajo2.gif\">"));
+		int inicio = pagina
+				.indexOf("<td width=\"21\" rowspan=\"3\" background=\"gif/tablabases.gif\">") - 5;
+		int fin = pagina
+				.indexOf(
+						"</table>\n<table width=\"750\" cellpadding=\"0\" cellspacing=\"0\" background=\"gif/fondotablaabajo2.gif\">",
+						inicio);
+		pagina = pagina.substring(inicio, fin);
 	}
 
 	@Override
@@ -74,21 +74,21 @@ public class PaginaEquipo extends Pagina {
 	}
 
 	public void limpiarExtra() {
-		pagina = pagina
-				.replace("&nbsp;", "")
-				.replace("nowrap", "")
-				.replace("&ordf;", "")
-				.replace("<font color=\"navy\">", "")
-				.replace(
-						"<td width=\"21\" rowspan=\"3\" background=\"gif/tablabases.gif\"></td>",
-						"")
-				.replace(
-						"<td width=\"21\" rowspan=\"4\" background=\"gif/tablaaleros.gif\"></td>",
-						"")
-				.replace(
-						"<td width=\"21\" rowspan=\"4\" background=\"gif/tablapivots.gif\"></td>",
-						"");
-
+		StringBuilder sb = new StringBuilder(pagina);
+		reemplazar("&nbsp;", "", sb);
+		reemplazar("nowrap", "", sb);
+		reemplazar("&ordf;", "", sb);
+		reemplazar("<font color=\"navy\">", "", sb);
+		reemplazar(
+				"<td width=\"21\" rowspan=\"3\" background=\"gif/tablabases.gif\"></td>",
+				"", sb);
+		reemplazar(
+				"<td width=\"21\" rowspan=\"4\" background=\"gif/tablaaleros.gif\"></td>",
+				"", sb);
+		reemplazar(
+				"<td width=\"21\" rowspan=\"4\" background=\"gif/tablapivots.gif\"></td>",
+				"", sb);
+		pagina = sb.toString();
 	}
 
 }

@@ -14,10 +14,10 @@ import android.util.Log;
 
 /**
  * 
- * Corrige y elimina las etiquetas html de la pï¿½gina de las ligas. Ofreciendo el
- * resultado en forma de ï¿½rbol XML.
+ * Corrige y elimina las etiquetas html de la página de las ligas. Ofreciendo
+ * el resultado en forma de árbol XML.
  * 
- * @author Juan Mompeï¿½n Esteban
+ * @author Juan Mompeán Esteban
  * 
  */
 public class PaginaLigas extends Pagina {
@@ -64,14 +64,10 @@ public class PaginaLigas extends Pagina {
 
 	@Override
 	protected void getTabla() {
-		pagina = pagina
-				.substring(pagina
-						.lastIndexOf("<tr>\n  <td height=\"25\" background=\"gif/ligaprivada.gif\">"));
-		pagina = pagina.substring(0, pagina.indexOf("</table>"));
-	}
-
-	@Override
-	protected void borrarLinks() {
+		int inicio = pagina
+				.lastIndexOf("<tr>\n  <td height=\"25\" background=\"gif/ligaprivada.gif\">");
+		int fin = pagina.indexOf("</table>", inicio);
+		pagina = pagina.substring(inicio, fin);
 	}
 
 	public final void limpiarExtra() {

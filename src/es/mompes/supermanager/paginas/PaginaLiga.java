@@ -12,13 +12,12 @@ import org.xml.sax.InputSource;
 
 import android.util.Log;
 
-
 /**
  * 
- * Corrige y elimina etiquetas html de la pï¿½gina de una liga. Ofreciendo el
- * resultado en forma de ï¿½rbol XML.
+ * Corrige y elimina etiquetas html de la página de una liga. Ofreciendo el
+ * resultado en forma de árbol XML.
  * 
- * @author Juan Mompeï¿½n Esteban
+ * @author Juan Mompeán Esteban
  * 
  */
 public class PaginaLiga extends Pagina {
@@ -63,9 +62,9 @@ public class PaginaLiga extends Pagina {
 
 	@Override
 	protected void getTabla() {
-		pagina = pagina.substring(pagina.indexOf("marengoabajoder"));
-		pagina = pagina.substring(pagina.indexOf("<tr>"));
-		pagina = pagina.substring(0, pagina.indexOf("</table>"));
+		int inicio = pagina.indexOf("<tr>", pagina.indexOf("marengoabajoder"));
+		int fin = pagina.indexOf("</table>", inicio);
+		pagina = pagina.substring(inicio, fin);
 	}
 
 }
