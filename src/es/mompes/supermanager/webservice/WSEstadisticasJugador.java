@@ -6,33 +6,41 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import android.util.Log;
 import es.mompes.supermanager.paginas.PaginaJugador;
 import es.mompes.supermanager.util.Configuration;
 import es.mompes.supermanager.util.EstadisticasJugador;
 import es.mompes.supermanager.util.GetPageException;
-import es.mompes.supermanager.util.Helper;
 
 public class WSEstadisticasJugador {
+	
+	private static String TAG = WSEstadisticasJugador.class.getName();
 	public static List<EstadisticasJugador> getEstadisticas(String codigoJugador) {
 		List<EstadisticasJugador> estadisticas = new LinkedList<EstadisticasJugador>();
 		PaginaJugador paginaJugador;
 		try {
-			paginaJugador = new PaginaJugador(WebService.getPaginaLogueado(
+			paginaJugador = new PaginaJugador(WebService.getPagina(
 					Configuration.getInstance().getProperty(
 							Configuration.JUGADORESTADISTICAS1)
 							+ codigoJugador
 							+ Configuration.getInstance().getProperty(
-									Configuration.JUGADORESTADISTICAS2), null));
+									Configuration.JUGADORESTADISTICAS2)));
 		} catch (GetPageException e) {
+			Log.e(TAG, "Error recuperando la página de estadísticas del jugador: " + e.getMessage());
 			return estadisticas;
 		}
 		paginaJugador.limpiar();
 		NodeList nodo = paginaJugador.toXML();
 		if (nodo != null) {
 			for (int i = 0; i < nodo.getLength(); i++) {
-				Element jugador = (Element) nodo.item(i);
-				estadisticas.add(extraerFilaEstadisticas(jugador));
+				Element fila = (Element) nodo.item(i);
+				EstadisticasJugador filaEstadisticas = extraerFilaEstadisticas(fila);
+				if (filaEstadisticas != null) {
+					estadisticas.add(filaEstadisticas);
+				}
 			}
+		} else {
+			Log.d(TAG, "El nodo es null");
 		}
 		return estadisticas;
 	}
@@ -44,46 +52,51 @@ public class WSEstadisticasJugador {
 		int faltaEnContra = 0, masMenos = 0, valoracion = 0;
 		String minutos = "", t1 = "", t2 = "", t3 = "", rebotes = "", tapones = "";
 		NodeList hijos = jugador.getChildNodes();
-		// Esta nÃºmero se utiliza para corregir la diferencia de Ã­ndices
-		// entre los valores normales de las estadÃ­sticas y los valores de
+		// Este número se utiliza para corregir la diferencia de índices
+		// entre los valores normales de las estadísticas y los valores de
 		// los totales y los promedios.
 		int extra = 0;
-		if (Helper.getTextContent(hijos.item(1)).trim().equals("Totales")
-				| Helper.getTextContent(hijos.item(1)).trim()
-						.equals("Promedios")) {
+		if (hijos.item(1) != null
+				&& (hijos.item(1).getTextContent().trim().equals("Totales") | hijos
+						.item(1).getTextContent().trim().equals("Promedios"))) {
 			extra = -4;
 			jornada = -1;
 		} else {
-			jornada = Integer.parseInt(Helper.getTextContent(hijos.item(3)));
+			try {
+				jornada = Integer.parseInt(hijos.item(3).getTextContent());
+			} catch (Exception e) {
+				return null;
+			}
 		}
-		minutos = Helper.getTextContent(hijos.item(7 + extra));
+		// Si falla parseando algún dato devuelve null
 		try {
-			puntos = Integer.parseInt(Helper.getTextContent(hijos
-					.item(9 + extra)));
+			minutos = hijos.item(7 + extra).getTextContent();
+			puntos = Integer.parseInt(hijos.item(9 + extra).getTextContent());
+			t2 = hijos.item(11 + extra).getTextContent();
+			t3 = hijos.item(13 + extra).getTextContent();
+			t1 = hijos.item(15 + extra).getTextContent();
+			rebotes = hijos.item(17 + extra).getTextContent();
+			asistencias = Integer.parseInt(hijos.item(19 + extra)
+					.getTextContent());
+			recuperaciones = Integer.parseInt(hijos.item(21 + extra)
+					.getTextContent());
+			perdidas = Integer
+					.parseInt(hijos.item(23 + extra).getTextContent());
+			contraataques = Integer.parseInt(hijos.item(25 + extra)
+					.getTextContent());
+			tapones = hijos.item(27 + extra).getTextContent();
+			mates = Integer.parseInt(hijos.item(29 + extra).getTextContent());
+			faltaAFavor = Integer.parseInt(hijos.item(31 + extra)
+					.getTextContent());
+			faltaEnContra = Integer.parseInt(hijos.item(33 + extra)
+					.getTextContent());
+			masMenos = Integer
+					.parseInt(hijos.item(35 + extra).getTextContent());
+			valoracion = Integer.parseInt(hijos.item(37 + extra)
+					.getTextContent());
 		} catch (Exception e) {
+			return null;
 		}
-		t2 = Helper.getTextContent(hijos.item(11 + extra));
-		t3 = Helper.getTextContent(hijos.item(13 + extra));
-		t1 = Helper.getTextContent(hijos.item(15 + extra));
-		rebotes = Helper.getTextContent(hijos.item(17 + extra));
-		asistencias = Integer.parseInt(Helper.getTextContent(hijos
-				.item(19 + extra)));
-		recuperaciones = Integer.parseInt(Helper.getTextContent(hijos
-				.item(21 + extra)));
-		perdidas = Integer.parseInt(Helper.getTextContent(hijos
-				.item(23 + extra)));
-		contraataques = Integer.parseInt(Helper.getTextContent(hijos
-				.item(25 + extra)));
-		tapones = Helper.getTextContent(hijos.item(27 + extra));
-		mates = Integer.parseInt(Helper.getTextContent(hijos.item(29 + extra)));
-		faltaAFavor = Integer.parseInt(Helper.getTextContent(hijos
-				.item(31 + extra)));
-		faltaEnContra = Integer.parseInt(Helper.getTextContent(hijos
-				.item(33 + extra)));
-		masMenos = Integer.parseInt(Helper.getTextContent(hijos
-				.item(35 + extra)));
-		valoracion = Integer.parseInt(Helper.getTextContent(hijos
-				.item(37 + extra)));
 		return new EstadisticasJugador(jornada, minutos, puntos, t1, t2, t3,
 				rebotes, asistencias, recuperaciones, perdidas, contraataques,
 				tapones, mates, faltaAFavor, faltaEnContra, masMenos,

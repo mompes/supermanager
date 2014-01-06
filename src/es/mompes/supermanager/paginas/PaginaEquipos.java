@@ -12,13 +12,12 @@ import org.xml.sax.InputSource;
 
 import android.util.Log;
 
-
 /**
  * 
- * Elimina y corrige el html de la pï¿½gina de los equipos. Ofreciendo el
- * resultado en forma de ï¿½rbol XML.
+ * Elimina y corrige el html de la página de los equipos. Ofreciendo el
+ * resultado en forma de árbol XML.
  * 
- * @author Juan Mompeï¿½n Esteban
+ * @author Juan Mompeán Esteban
  * 
  */
 public class PaginaEquipos extends Pagina {
@@ -34,13 +33,13 @@ public class PaginaEquipos extends Pagina {
 
 	@Override
 	protected void getTabla() {
-		pagina = pagina
-				.substring(pagina
-						.indexOf("<tr>\n  <td height=\"25\" class=\"grisizqda\" style=\"text-align:right;\">"));
-		pagina = pagina
-				.substring(
-						0,
-						pagina.indexOf("<tr>\n   <td colspan=\"6\" background=\"gif/tusequiposabajo2.gif\" height=\"14\">"));
+		int inicio = pagina
+				.indexOf("<tr>\n  <td height=\"25\" class=\"grisizqda\" style=\"text-align:right;\">");
+		int fin = pagina
+				.indexOf(
+						"<tr>\n   <td colspan=\"6\" background=\"gif/tusequiposabajo2.gif\" height=\"14\">",
+						inicio);
+		pagina = pagina.substring(inicio, fin);
 	}
 
 	@Override
@@ -75,6 +74,5 @@ public class PaginaEquipos extends Pagina {
 
 	public void limpiaExtra() {
 		pagina = pagina.replace("&nbsp;", "");
-
 	}
 }

@@ -13,19 +13,19 @@ import org.xml.sax.InputSource;
 import android.util.Log;
 
 /**
- * Gestiona y procesa la pï¿½gina de las clasificaciones. Ofreciendo el resultado
- * en forma de ï¿½rbol XML.
+ * Gestiona y procesa la página de las clasificaciones. Ofreciendo el
+ * resultado en forma de árbol XML.
  * 
- * @author Juan Mompeï¿½n Esteban
+ * @author Juan Mompeán Esteban
  * 
  */
 public class PaginaClasificacion extends Pagina {
 
 	/**
-	 * Construye una nueva pï¿½gina de clasificaciones.
+	 * Construye una nueva página de clasificaciones.
 	 * 
 	 * @param npagina
-	 *            La pï¿½gina a analizar.
+	 *            La página a analizar.
 	 */
 	public PaginaClasificacion(final String npagina) {
 		super(npagina);
@@ -76,14 +76,13 @@ public class PaginaClasificacion extends Pagina {
 
 	@Override
 	protected final void getTabla() {
-		this.pagina = this.pagina
-				.substring(this.pagina
-						.indexOf("<table width=\"609\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">"));
-		this.pagina = this.pagina
-				.substring(
-						0,
-						this.pagina
-								.indexOf("<table width=\"609\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<tr>\n   <td background=\"gif/clasificacionpie.gif\" height=\"51\"><img src=\"gif/pixel.gif\" width=\"1\" height=\"1\" border=\"0\"></td>"));
+		int inicio = pagina
+				.indexOf("<table width=\"609\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
+		int fin = pagina
+				.indexOf(
+						"<table width=\"609\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<tr>\n   <td background=\"gif/clasificacionpie.gif\" height=\"51\"><img src=\"gif/pixel.gif\" width=\"1\" height=\"1\" border=\"0\"></td>",
+						inicio);
+		this.pagina = this.pagina.substring(inicio, fin);
 		this.pagina = this.pagina.replaceAll("<table [^>]*>", "");
 		this.pagina = "<table>" + this.pagina.replaceAll("</table>", "")
 				+ "</table>";

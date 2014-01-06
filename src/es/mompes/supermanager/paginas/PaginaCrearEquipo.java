@@ -36,7 +36,7 @@ public class PaginaCrearEquipo extends Pagina {
 			Log.e("PaginaEquipo", "Codificación " + e1.getMessage());
 			return null;
 		}
-		is.setEncoding("UTF-8"); 
+		is.setEncoding("UTF-8");
 		// Create a factory
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		// Use the factory to create a builder
@@ -57,30 +57,31 @@ public class PaginaCrearEquipo extends Pagina {
 
 	@Override
 	protected void getTabla() {
-		pagina = pagina
-				.substring(pagina
-						.indexOf("<td width=\"21\" rowspan=\"3\" background=\"gif/tablabases.gif\">") - 5);
-		pagina = pagina
-				.substring(
-						0,
-						pagina.indexOf("</table>\n<table width=\"608\" cellpadding=\"0\" cellspacing=\"0\" background=\"gif/fondotablaabajo.gif\">"));
+		int inicio = pagina
+				.indexOf("<td width=\"21\" rowspan=\"3\" background=\"gif/tablabases.gif\">") - 5;
+		int fin = pagina
+				.indexOf(
+						"</table>\n<table width=\"608\" cellpadding=\"0\" cellspacing=\"0\" background=\"gif/fondotablaabajo.gif\">",
+						inicio);
+		pagina = pagina.substring(inicio, fin);
 	}
 
 	public void limpiarExtra() {
-		pagina = pagina
-				.replace("&nbsp;", "")
-				.replace("nowrap", "")
-				.replace("&ordf;", "")
-				.replace("<font color=\"navy\">", "")
-				.replace(
-						"<td width=\"21\" rowspan=\"3\" background=\"gif/tablabases.gif\"></td>",
-						"")
-				.replace(
-						"<td width=\"21\" rowspan=\"4\" background=\"gif/tablaaleros.gif\"></td>",
-						"")
-				.replace(
-						"<td width=\"21\" rowspan=\"4\" background=\"gif/tablapivots.gif\"></td>",
-						"");
+		StringBuilder sb = new StringBuilder(pagina);
+		reemplazar("&nbsp;", "", sb);
+		reemplazar("nowrap", "", sb);
+		reemplazar("&ordf;", "", sb);
+		reemplazar("<font color=\"navy\">", "", sb);
+		reemplazar(
+				"<td width=\"21\" rowspan=\"3\" background=\"gif/tablabases.gif\"></td>",
+				"", sb);
+		reemplazar(
+				"<td width=\"21\" rowspan=\"4\" background=\"gif/tablaaleros.gif\"></td>",
+				"", sb);
+		reemplazar(
+				"<td width=\"21\" rowspan=\"4\" background=\"gif/tablapivots.gif\"></td>",
+				"", sb);
+		pagina = sb.toString();
 
 	}
 }

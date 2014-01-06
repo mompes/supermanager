@@ -1,6 +1,5 @@
 package es.mompes.supermanager.webservice;
 
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import es.mompes.supermanager.util.EnumClasificacion;
 import es.mompes.supermanager.util.EnumZona;
 import es.mompes.supermanager.util.EquipoLiga;
 import es.mompes.supermanager.util.GetPageException;
-import es.mompes.supermanager.util.Helper;
 
 /**
  * Gestiona el acceso a los datos de las clasificaciones.
@@ -49,11 +47,15 @@ public class WSClasificacion {
 			final EnumClasificacion clasificacion) throws GetPageException {
 		// Añade a la petición de página la opción seleccionada
 		List<NameValuePair> parametros = new LinkedList<NameValuePair>();
-		parametros.add(new BasicNameValuePair(WSClasificacion.RADIO_AMBITO, zona.toTopRadio()));
-		parametros.add(new BasicNameValuePair(WSClasificacion.RADIO_TIPO, clasificacion.toTopRadio()));
+		parametros.add(new BasicNameValuePair(WSClasificacion.RADIO_AMBITO,
+				zona.toTopRadio()));
+		parametros.add(new BasicNameValuePair(WSClasificacion.RADIO_TIPO,
+				clasificacion.toTopRadio()));
 		// Descarga la página
-		PaginaClasificacion pageTop = new PaginaClasificacion(WebService.getPaginaLogueado(Configuration
-				.getInstance().getProperty(Configuration.CLASIFICACIONESURL), parametros));
+		PaginaClasificacion pageTop = new PaginaClasificacion(
+				WebService.getPaginaLogueado(Configuration.getInstance()
+						.getProperty(Configuration.CLASIFICACIONESURL),
+						parametros));
 		// Limpia la página
 		pageTop.limpiar();
 
@@ -84,14 +86,14 @@ public class WSClasificacion {
 			Element element = (Element) nodeList.item(i);
 			NodeList team = element.getChildNodes();
 			if (clasificacion != EnumClasificacion.HISTORICO) {
-				nname = Helper.getTextContent(team.item(3));
-				nuser = Helper.getTextContent(team.item(5));
-				nvalue = Helper.getTextContent(team.item(7)).replace(',', '.')
+				nname = team.item(3).getTextContent();
+				nuser = team.item(5).getTextContent();
+				nvalue = team.item(7).getTextContent().replace(',', '.')
 						.replace("\"", "");
 			} else {
-				nname = Helper.getTextContent(team.item(3));
-				nuser = Helper.getTextContent(team.item(7));
-				nvalue = Helper.getTextContent(team.item(5)).replace(',', '.')
+				nname = team.item(3).getTextContent();
+				nuser = team.item(7).getTextContent();
+				nvalue = team.item(5).getTextContent().replace(',', '.')
 						.replace("\"", "");
 			}
 			teamLeague = new EquipoLiga(nname, nuser, nvalue);

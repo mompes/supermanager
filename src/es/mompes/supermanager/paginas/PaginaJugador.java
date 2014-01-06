@@ -14,18 +14,18 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Procesa la pï¿½gina con las estadï¿½sticas de un jugador.
+ * Procesa la página con las estadï¿½sticas de un jugador.
  * 
- * @author Juan Mompeï¿½n Esteban
+ * @author Juan Mompeán Esteban
  * 
  */
 public class PaginaJugador extends Pagina {
 
 	/**
-	 * Construye un nuevo objeto para analizar la pï¿½gina del jugador.
+	 * Construye un nuevo objeto para analizar la página del jugador.
 	 * 
 	 * @param npage
-	 *            La pï¿½gina a analizar.
+	 *            La página a analizar.
 	 */
 	public PaginaJugador(final String npage) {
 		super(npage);
@@ -70,10 +70,11 @@ public class PaginaJugador extends Pagina {
 
 	@Override
 	protected void getTabla() {
-		this.pagina = this.pagina.substring(this.pagina
+		int inicio = pagina.indexOf("<tr>", pagina
 				.indexOf("<table class=\"estadisticas2\" cellspacing=\"0\">"));
-		this.pagina = this.pagina.substring(0, this.pagina.indexOf("</table>"));
-		this.pagina = this.pagina.substring(this.pagina.indexOf("<tr>"));
+		int fin = pagina.indexOf("</table>", inicio);
+
+		this.pagina = this.pagina.substring(inicio, fin);
 	}
 
 }

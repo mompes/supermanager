@@ -1,8 +1,6 @@
 package es.mompes.supermanager.paginas;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -25,9 +23,10 @@ public class PaginaMercadoCrearEquipo extends Pagina {
 	@Override
 	public void limpiar() {
 		super.limpiar();
-		pagina = pagina.replaceAll("<input [^>]*>", "").replace("</input>", "").replace("</table>", "");
+		pagina = pagina.replaceAll("<input [^>]*>", "").replace("</input>", "")
+				.replace("</table>", "");
 	}
-	
+
 	@Override
 	public NodeList toXML() {
 		pagina = "<table>" + pagina + "</table>";
@@ -40,7 +39,6 @@ public class PaginaMercadoCrearEquipo extends Pagina {
 			return null;
 		}
 		is.setEncoding("UTF-8");
-		Reader reader = is.getCharacterStream();
 		// Create a factory
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		// Use the factory to create a builder
@@ -60,12 +58,11 @@ public class PaginaMercadoCrearEquipo extends Pagina {
 
 	@Override
 	protected void getTabla() {
-		pagina = pagina.substring(pagina
-				.indexOf("<tr>\n   <td class=\"grisizqda\""));
-		pagina = pagina
-				.substring(
-						0,
-						pagina.indexOf("<table width=\"450\" cellpadding=\"0\" cellspacing=\"0\" background=\"gif/fondomercadoabajo.gif\" align=\"center\">"));
+		int inicio = pagina.indexOf("<tr>\n   <td class=\"grisizqda\"");
+		int fin = pagina
+				.indexOf(
+						"<table width=\"450\" cellpadding=\"0\" cellspacing=\"0\" background=\"gif/fondomercadoabajo.gif\" align=\"center\">",
+						inicio);
+		pagina = pagina.substring(inicio, fin);
 	}
-
 }

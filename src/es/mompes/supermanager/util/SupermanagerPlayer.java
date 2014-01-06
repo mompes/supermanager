@@ -130,8 +130,8 @@ public class SupermanagerPlayer implements Serializable {
 	 * @param nposicion
 	 *            La posición en la que juega el jugador.
 	 * @param nbaja15
-	 *            La valoración necesaria para que el precio del jugador baje un
-	 *            15%.
+	 *            La valoración necesaria para que el precio del jugador baje
+	 *            un 15%.
 	 * @param nbalance
 	 *            El número de victorias y derrotas del jugador expresado en el
 	 *            siguiente formato: (Victorias/Derrotas).
@@ -141,8 +141,8 @@ public class SupermanagerPlayer implements Serializable {
 	 *            La valoración necesaria para que el precio del jugador se
 	 *            mantenga.
 	 * @param nsube15
-	 *            La valoración necesaria para que el precio del jugador suba un
-	 *            15%.
+	 *            La valoración necesaria para que el precio del jugador suba
+	 *            un 15%.
 	 * @param nvaloracionUltimos3Partidos
 	 *            La valoración en los últimos 3 partidos del jugador.
 	 */
@@ -177,7 +177,8 @@ public class SupermanagerPlayer implements Serializable {
 
 	/**
 	 * 
-	 * @return Jornada en la que se fichó al jugador o infinito si se desconoce.
+	 * @return Jornada en la que se fichó al jugador o infinito si se
+	 *         desconoce.
 	 */
 	public int getJornadaFichaje() {
 		return jornadaFichaje;
@@ -520,7 +521,9 @@ public class SupermanagerPlayer implements Serializable {
 			return false;
 		}
 		SupermanagerPlayer p = (SupermanagerPlayer) o;
-		return nombre.equals(p.nombre) && equipo.equals(p.equipo);
+		return nombre != null && p.nombre != null && nombre.equals(p.nombre)
+				&& equipo != null && p.equipo != null
+				&& equipo.equals(p.equipo);
 	}
 
 	@Override

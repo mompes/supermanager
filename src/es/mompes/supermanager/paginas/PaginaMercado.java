@@ -14,10 +14,10 @@ import android.util.Log;
 
 /**
  * 
- * Corrige y elimina las etiquetas html de la pï¿½gina del mercado. Ofreciendo el
- * resultado en forma de ï¿½rbol XML.
+ * Corrige y elimina las etiquetas html de la página del mercado. Ofreciendo
+ * el resultado en forma de árbol XML.
  * 
- * @author Juan Mompeï¿½n Esteban
+ * @author Juan Mompeán Esteban
  * 
  */
 public class PaginaMercado extends Pagina {
@@ -28,9 +28,9 @@ public class PaginaMercado extends Pagina {
 
 	@Override
 	protected final void getTabla() {
-		pagina = pagina.substring(pagina
-				.indexOf("<tr>\n  <td class=\"grisizqda\""));
-		pagina = pagina.substring(0, pagina.indexOf("<table width=\"841\""));
+		int inicio = pagina.indexOf("<tr>\n  <td class=\"grisizqda\"");
+		int fin = pagina.indexOf("<table width=\"841\"", inicio);
+		pagina = pagina.substring(inicio, fin);
 	}
 
 	@Override
