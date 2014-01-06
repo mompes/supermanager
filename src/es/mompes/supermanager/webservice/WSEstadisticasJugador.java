@@ -6,23 +6,27 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import android.util.Log;
 import es.mompes.supermanager.paginas.PaginaJugador;
 import es.mompes.supermanager.util.Configuration;
 import es.mompes.supermanager.util.EstadisticasJugador;
 import es.mompes.supermanager.util.GetPageException;
 
 public class WSEstadisticasJugador {
+	
+	private static String TAG = WSEstadisticasJugador.class.getName();
 	public static List<EstadisticasJugador> getEstadisticas(String codigoJugador) {
 		List<EstadisticasJugador> estadisticas = new LinkedList<EstadisticasJugador>();
 		PaginaJugador paginaJugador;
 		try {
-			paginaJugador = new PaginaJugador(WebService.getPaginaLogueado(
+			paginaJugador = new PaginaJugador(WebService.getPagina(
 					Configuration.getInstance().getProperty(
 							Configuration.JUGADORESTADISTICAS1)
 							+ codigoJugador
 							+ Configuration.getInstance().getProperty(
-									Configuration.JUGADORESTADISTICAS2), null));
+									Configuration.JUGADORESTADISTICAS2)));
 		} catch (GetPageException e) {
+			Log.e(TAG, "Error recuperando la página de estadísticas del jugador: " + e.getMessage());
 			return estadisticas;
 		}
 		paginaJugador.limpiar();
@@ -35,6 +39,8 @@ public class WSEstadisticasJugador {
 					estadisticas.add(filaEstadisticas);
 				}
 			}
+		} else {
+			Log.d(TAG, "El nodo es null");
 		}
 		return estadisticas;
 	}

@@ -92,20 +92,25 @@ public class WebService {
 			return respuesta;
 		} catch (Exception e) {
 			throw new GetPageException(
-					"Hubo un problema descargando la página web.");
+					"Hubo un problema descargando la página web: " + e.getMessage());
 		}
 	}
 
 	public static String getPagina(String url) throws GetPageException {
 		try {
-			HttpGet post = new HttpGet(url);
+			HttpGet get = new HttpGet(url);
+			get.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36");
+			get.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+			get.addHeader("Accept-Language", "en,es;q=0.8,en-GB;q=0.6,ca;q=0.4");
+			get.addHeader("Cache-Control", "max-age=0");
 			ResponseHandler<String> res = new BasicResponseHandler();
 			// Descarga la página y la almacena en respuesta
-			String respuesta = getClienteNoLogueado().execute(post, res);
+			String respuesta = getClienteNoLogueado().execute(get, res);
+			//Log.d(TAG, respuesta);
 			return respuesta;
 		} catch (Exception e) {
 			throw new GetPageException(
-					"Hubo un problema descargando la página web.");
+					"Hubo un problema descargando la página web: " + e.getMessage());
 		}
 	}
 
