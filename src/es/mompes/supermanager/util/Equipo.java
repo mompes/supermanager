@@ -134,6 +134,13 @@ public class Equipo extends Observable implements Serializable {
 		this.setChanged();
 		this.notifyObservers();
 	}
+	
+	public final void replaceJugador(final int posicion, final SupermanagerPlayer jugador) {
+		jugadores.remove(posicion);
+		jugadores.add(posicion, jugador);
+		this.setChanged();
+		this.notifyObservers();
+	}
 
 	@Override
 	public String toString() {
